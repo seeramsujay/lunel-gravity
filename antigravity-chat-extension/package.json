@@ -1,0 +1,38 @@
+{
+  "name": "antigravity-chat-extension",
+  "displayName": "Antigravity Chat Monitor",
+  "description": "Monitor and interact with active agent chat cascades",
+  "version": "0.0.1",
+  "publisher": "antigravity-devs",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "*"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "antigravity-chat-extension.showAnalytics",
+        "title": "Show Agent Analytics"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "antigravity-sdk": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.0",
+    "@types/node": "^20.0.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.0.0"
+  }
+}
