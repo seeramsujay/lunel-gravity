@@ -64,6 +64,47 @@ npx lunel-gravity
 
 <br />
 
+## Antigravity IDE Extension
+
+To synchronize your IDE cascades and agent chat trajectories with the mobile app, you need to install the Antigravity Chat extension in your VS Code / Antigravity IDE.
+
+### Installation Options
+
+#### Option A: Install from VS Code Marketplace (Recommended)
+1. Open your VS Code or Antigravity IDE.
+2. Open the Extensions view (`Ctrl+Shift+X` or `Cmd+Shift+X`).
+3. Search for **"Antigravity Chat"** or **"lunel-gravity"**.
+4. Click **Install**.
+
+#### Option B: Install from VSIX Package
+1. Download the pre-compiled `.vsix` package from the [Releases](https://github.com/seeramsujay/lunel-gravity/releases) page.
+2. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`).
+3. Select **Developer: Install Extension from VSIX...**.
+4. Choose the downloaded `.vsix` file and reload the editor.
+
+#### Option C: Build and Sideload from Source
+1. Navigate to the extension project folder:
+   ```bash
+   cd antigravity-chat-extension
+   ```
+2. Install development tools and dependencies:
+   ```bash
+   npm install
+   ```
+3. Compile and build the extension bundle:
+   ```bash
+   npm run build
+   ```
+4. Sideload it into your IDE or package it manually:
+   ```bash
+   npx vsce package
+   ```
+   Then install the packaged `.vsix` file.
+
+<br />
+
+<br />
+
 ## Manager and Proxy
 
 Bun-based WebSocket relay server that connects CLI and app using session codes. Public verion deployed on gateway.lunel.dev
