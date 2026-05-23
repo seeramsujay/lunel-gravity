@@ -39,6 +39,7 @@ const PTY_RELEASE_BASE_URL = "https://github.com/lunel-dev/lunel/releases/downlo
 const AI_RUNTIME_INSTALL_CANDIDATES: Record<AiBackend, string[]> = {
   opencode: ["opencode-ai", "@opencode-ai/cli", "opencode"],
   codex: ["@openai/codex", "codex"],
+  antigravity: [],
 };
 const PTY_RELEASES: Record<string, { fileName: string; url: string }> = {
   "linux:x64": {

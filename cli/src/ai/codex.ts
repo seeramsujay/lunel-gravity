@@ -205,7 +205,7 @@ export class CodexProvider implements AIProvider {
     };
   }
 
-  async createSession(title?: string): Promise<{ session: SessionInfo }> {
+  async createSession(title?: string, model?: ModelSelector, agent?: string): Promise<{ session: SessionInfo }> {
     const result = await this.call("thread/start", {
       cwd: process.cwd(),
       persistExtendedHistory: true,

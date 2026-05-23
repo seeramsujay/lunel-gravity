@@ -1,0 +1,13 @@
+{
+  "name": "lunel-gravity",
+  "version": "0.1.0",
+  "description": "Lunel with Antigravity integration",
+  "main": "cli/dist/index.js",
+  "bin": {
+    "lunel-gravity": "./cli/dist/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node cli/dist/index.js"
+  }
+}

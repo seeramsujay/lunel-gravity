@@ -87,7 +87,7 @@ const FILE_MENTION_RESULT_LIMIT = 10;
 // Session tab interface
 interface AITab extends BaseTab {
   sessionId?: string;
-  backend: "opencode" | "codex";
+  backend: AiBackend;
   updatedAt?: number;
 }
 
@@ -172,12 +172,14 @@ function AISkeleton({ colors, paddingTop = 0 }: { colors: any; paddingTop?: numb
 }
 
 function formatBackendSessionTitle(backend: AiBackend, title?: string) {
-  return backend === "codex" ? "Codex" : "OpenCode";
+  if (backend === "codex") return "Codex";
+  if (backend === "antigravity") return "Antigravity";
+  return "OpenCode";
 }
 
 function isBackendUnavailableError(message: string): boolean {
   return (
-    /backend\s+"?(opencode|codex)"?\s+is not available/i.test(message)
+    /backend\s+"?(opencode|codex|antigravity)"?\s+is not available/i.test(message)
     || /eunavailable/i.test(message)
     || /no ai backends available/i.test(message)
     || /ai manager not initialized/i.test(message)
@@ -2547,7 +2549,7 @@ function TuneSheet({
             )}
           </View>
 
-          {(backend === "codex" || backend === "opencode") && (
+          {(backend === "codex" || backend === "opencode" || backend === "antigravity") && (
             <>
               {/* Reasoning */}
               {reasoningOptions.length > 0 && (
@@ -2711,18 +2713,22 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
   const [agentsByBackend, setAgentsByBackend] = useState<Record<AiBackend, { id: string; name: string; icon?: React.ComponentType<any> }[]>>({
     opencode: DEFAULT_OPENCODE_AGENTS,
     codex: DEFAULT_CODEX_AGENTS,
+    antigravity: [{ id: "antigravity", name: "Antigravity Agent", icon: Sparkles }],
   });
   const [modelOptionsByBackend, setModelOptionsByBackend] = useState<Record<AiBackend, { id: string; name: string; badges?: string[]; detail?: string }[]>>({
     opencode: [],
     codex: [],
+    antigravity: [],
   });
   const [selectedAgentByBackend, setSelectedAgentByBackend] = useState<Record<AiBackend, string>>({
     opencode: "build",
     codex: "default",
+    antigravity: "antigravity",
   });
   const [selectedModelByBackend, setSelectedModelByBackend] = useState<Record<AiBackend, string>>({
     opencode: "",
     codex: "",
+    antigravity: "",
   });
   const [codexReasoningEffort, setCodexReasoningEffort] = useState<NonNullable<CodexPromptOptions["reasoningEffort"]>>("medium");
   const [codexSpeed, setCodexSpeed] = useState<string>("default");
@@ -2730,6 +2736,7 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
   const [providersByBackend, setProvidersByBackend] = useState<Record<AiBackend, AIProvider[]>>({
     opencode: [],
     codex: [],
+    antigravity: [],
   });
 
   // UI state
@@ -2776,6 +2783,7 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
   const [needsApiKeyByBackend, setNeedsApiKeyByBackend] = useState<Record<AiBackend, boolean>>({
     opencode: false,
     codex: false,
+    antigravity: false,
   });
   const [isInitialized, setIsInitialized] = useState(false);
   const [isInitialSessionsLoading, setIsInitialSessionsLoading] = useState(false);
@@ -2898,7 +2906,7 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
   const composerBottomOffset = composerHeight;
 
   useEffect(() => {
-    if ((activeBackend !== "codex" && activeBackend !== "opencode") || reasoningOptions.length === 0) return;
+    if ((activeBackend !== "codex" && activeBackend !== "opencode" && activeBackend !== "antigravity") || reasoningOptions.length === 0) return;
     const supported = reasoningOptions.map((option) => option.id);
     if (supported.includes(codexReasoningEffort)) return;
     const defaultEffort = selectedModelInfo?.defaultReasoningEffort;
@@ -3270,7 +3278,7 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
       setIsInitialized(true);
       setIsInitialSessionsLoading(true);
       try {
-        void Promise.allSettled((["opencode", "codex"] as AiBackend[]).map(async (backend) => {
+        void Promise.allSettled((["opencode", "codex", "antigravity"] as AiBackend[]).map(async (backend) => {
           try {
             const agentsList = await ai.getAgents(backend);
             if (Array.isArray(agentsList) && agentsList.length > 0) {
@@ -3290,7 +3298,7 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
                 };
               });
               const resolvedAgents = mapped.length === 0
-                ? (backend === "codex" ? DEFAULT_CODEX_AGENTS : DEFAULT_OPENCODE_AGENTS)
+                ? (backend === "codex" ? DEFAULT_CODEX_AGENTS : backend === "antigravity" ? [{ id: "antigravity", name: "Antigravity Agent", icon: Sparkles }] : DEFAULT_OPENCODE_AGENTS)
                 : mapped;
               setAgentsByBackend((prev) => ({ ...prev, [backend]: resolvedAgents }));
               setSelectedAgentByBackend((prev) => ({ ...prev, [backend]: resolvedAgents[0]?.id || "" }));
@@ -3528,7 +3536,7 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
   }, [isDrawerOpen]);
 
   useEffect(() => {
-    if (status !== "connected" || !isInitialized || !isActive || activeBackend !== "opencode" || !activeSessionId) return;
+    if (status !== "connected" || !isInitialized || !isActive || (activeBackend !== "opencode" && activeBackend !== "antigravity") || !activeSessionId) return;
     void refreshSessionMessages(activeSessionId, activeBackend, false);
   }, [status, isInitialized, isActive, activeBackend, activeSessionId, refreshSessionMessages]);
 
@@ -3537,7 +3545,7 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
 
     let cancelled = false;
     const refreshOpenCodeActiveSession = async () => {
-      if (cancelled || isActiveSessionStreaming || activeBackend !== "opencode" || !activeSessionId) {
+      if (cancelled || isActiveSessionStreaming || (activeBackend !== "opencode" && activeBackend !== "antigravity") || !activeSessionId) {
         return;
       }
       await refreshSessionMessages(activeSessionId, activeBackend, false);
@@ -3580,7 +3588,7 @@ export default function AIPanel({ instanceId, isActive, bottomBarHeight }: Plugi
   const currentMessages = activeMessageBucketId ? messagesMap[activeMessageBucketId] || [] : [];
   const renderedMessages = useMemo(
     () => {
-      if (activeBackend !== "opencode") return currentMessages;
+      if (activeBackend !== "opencode" && activeBackend !== "antigravity") return currentMessages;
       const merged = mergeAssistantActivityMessages(currentMessages);
       logMergedChatState("render-list", activeBackend, currentMessages, merged);
       return merged;
@@ -3650,7 +3658,7 @@ const selectedModelNameFull = modelOptions.find((m) => m.id === selectedModel)?.
     setBackendPickerVisible(true);
   };
 
-  const createNewTabWithBackend = async (backend: "opencode" | "codex") => {
+  const createNewTabWithBackend = async (backend: AiBackend) => {
     const previousActiveTabId = activeTabId;
     const draftTabId = `draft-${backend}-${Date.now().toString(36)}`;
     const draftTab: AITab = {
@@ -4117,7 +4125,7 @@ const selectedModelNameFull = modelOptions.find((m) => m.id === selectedModel)?.
 
     try {
       await ai.abort(sessionId, backend);
-      if (backend === "opencode") {
+      if (backend === "opencode" || backend === "antigravity") {
         await refreshSessionMessagesRef.current(sessionId, backend, true);
       }
       setSessionActivityLabels((prev) => ({ ...prev, [sessionId]: "Interrupted" }));
@@ -4181,15 +4189,15 @@ const selectedModelNameFull = modelOptions.find((m) => m.id === selectedModel)?.
 
     // Resolve backend + transient draft context
     const activeTab = tabs.find((t) => t.id === activeTabId);
-    const messageBackend: "opencode" | "codex" = activeTab?.backend ?? pendingBackend ?? "opencode";
+    const messageBackend: AiBackend = activeTab?.backend ?? pendingBackend ?? "opencode";
     const selectedAgentForBackend = selectedAgent || undefined;
     let sessId = activeSessionId;
-    let localDraftTabId: string | null = activeTab && !activeTab.sessionId ? activeTab.id : null;
+    let localDraftTabId = activeTab && !activeTab.sessionId ? activeTab.id : null;
     if (!sessId && !localDraftTabId) {
       localDraftTabId = `draft-send-${Date.now().toString(36)}`;
       const draftTab: AITab = {
         id: localDraftTabId,
-        title: messageBackend === "codex" ? "Codex" : "OpenCode",
+        title: formatBackendSessionTitle(messageBackend),
         backend: messageBackend,
         updatedAt: Date.now(),
       };
@@ -4201,7 +4209,11 @@ const selectedModelNameFull = modelOptions.find((m) => m.id === selectedModel)?.
     const ensureSession = async (): Promise<string | null> => {
       if (sessId) return sessId;
       try {
-        const session = await ai.createSession(undefined, messageBackend);
+        const session = await ai.createSession(
+          undefined,
+          messageBackend,
+          { model: getModelRef(), agent: selectedAgentForBackend }
+        );
         sessId = session.id;
         const derivedTitle = displayText.replace(/@[\w.\-]+\s*/g, "").trim().slice(0, 40) || displayText.trim().slice(0, 40);
         const sessionTitle = (session.title || "").trim() || derivedTitle || (messageBackend === "codex" ? "Codex" : "OpenCode");
@@ -4782,6 +4794,7 @@ const selectedModelNameFull = modelOptions.find((m) => m.id === selectedModel)?.
           {[
             { backend: "codex" as const, label: "Codex", description: t('aiPanel.codexDesc'), Icon: Codex },
             { backend: "opencode" as const, label: "OpenCode", description: t('aiPanel.opencodeDesc'), Icon: OpenCode },
+            { backend: "antigravity" as const, label: "Antigravity", description: "Google DeepMind agent chat cascades", Icon: Sparkles },
             { label: "Claude Code", description: t('aiPanel.comingSoon'), disabled: true, Icon: ClaudeCode },
             { label: "Gemini", description: t('aiPanel.comingSoon'), disabled: true, Icon: Gemini },
             { label: "Cursor", description: t('aiPanel.comingSoon'), disabled: true, Icon: Cursor },

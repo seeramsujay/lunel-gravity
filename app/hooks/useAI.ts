@@ -36,8 +36,12 @@ export function useAI(events?: AIEvents) {
   }, [sendControl]);
 
   // Session management
-  const createSession = useCallback(async (title?: string, backend: AiBackend = 'opencode'): Promise<AISession> => {
-    const response = await sendControl('ai', 'createSession', { title, backend });
+  const createSession = useCallback(async (
+    title?: string,
+    backend: AiBackend = 'opencode',
+    options?: { model?: ModelRef; agent?: string }
+  ): Promise<AISession> => {
+    const response = await sendControl('ai', 'createSession', { title, backend, ...options });
     if (!response.ok) throw new Error(response.error?.message || 'Failed to create session');
     return { ...(response.payload.session as AISession), backend };
   }, [sendControl]);

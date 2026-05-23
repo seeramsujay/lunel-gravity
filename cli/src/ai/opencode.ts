@@ -379,7 +379,7 @@ export class OpenCodeProvider implements AIProvider {
   // Session management
   // -------------------------------------------------------------------------
 
-  async createSession(title?: string): Promise<{ session: SessionInfo }> {
+  async createSession(title?: string, model?: ModelSelector, agent?: string): Promise<{ session: SessionInfo }> {
     if (VERBOSE_AI_LOGS) console.log("[ai] createSession called");
     try {
       const response = await this.client!.session.create({ body: { title } });

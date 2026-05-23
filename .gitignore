@@ -7,3 +7,12 @@ manager/bun.lock
 manager/manager.db
 manager/manager.db-shm
 manager/manager.db-wal
+
+# Local settings and dependencies
+.vscode/
+android-sdk-local/
+node_modules/
+dist/
+build/
+*.log
+

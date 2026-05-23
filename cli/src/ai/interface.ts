@@ -69,7 +69,7 @@ export interface AIProvider {
   setActiveSession?(sessionId: string): void;
 
   // Session management
-  createSession(title?: string): Promise<{ session: SessionInfo }>;
+  createSession(title?: string, model?: ModelSelector, agent?: string): Promise<{ session: SessionInfo }>;
   listSessions(): Promise<{ sessions: unknown }>;
   getSession(id: string): Promise<{ session: SessionInfo }>;
   deleteSession(id: string): Promise<{ deleted: boolean }>;

@@ -13,6 +13,7 @@
 
 | Directory | Description |
 |-----------|-------------|
+| `antigravity-chat-extension/` | Antigravity IDE custom agent extension |
 | `app/` | Expo/React Native mobile app |
 | `cli/` | CLI tool (`lunel-cli`) |
 | `manager/` | Manager server |
@@ -45,20 +46,21 @@ Mobile app for iOS/Android/Web built with Expo. App is just a dumb client with m
 
 <br />
 
-## CLI
+## CLI & Daemon Server
 
-Node.js CLI that bridges your local machine to the app via WebSocket. Can be ran using `npx lunel-cli`
+A Node.js daemon that bridges your local machine/IDE directly to the mobile app via a secure, real-time WebSocket channel. 
 
-- Filesystem operations (read, write, grep, etc.)
-- Git commands (status, commit, push, pull, etc.)
-- Terminal spawning
-- Process management
-- Port scanning
-- System monitoring (CPU, memory, disk, battery)
-
+With the new Antigravity integration, you can bootstrap the entire stack with a single command:
 ```bash
-npx lunel-cli
+npx lunel-gravity
 ```
+*(Alternatively, you can run `npx lunel-cli` for the standard non-integrated mode).*
+
+### Key Capabilities
+- **Antigravity IDE Sync**: Real-time mirroring of active agent cascades, chat trajectories, planner modes, and model presets.
+- **Filesystem Access**: Full read, write, grep, and directory traversal.
+- **PTY Terminal**: High-frequency terminal spawning using a custom Rust terminal engine.
+- **System Monitoring**: Real-time stats on CPU, battery, RAM, and active ports.
 
 <br />
 
