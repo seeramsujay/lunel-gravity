@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090B14" />
+      <stop offset="50%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#05070D" />
+    </linearGradient>
+
+    <!-- Lunar Gravity Gradient -->
+    <linearGradient id="lunar-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7" />
+      <stop offset="50%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+
+    <!-- Core Quantum Antigravity Pulse -->
+    <linearGradient id="gravity-pulse" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+
+    <linearGradient id="core-glow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.05" />
+    </linearGradient>
+
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="subtle-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="800" rx="160" fill="url(#bg-grad)" />
+  <rect width="796" height="796" x="2" y="2" rx="158" fill="none" stroke="#1E293B" stroke-width="2" />
+
+  <!-- Gravitational Wave Reticle & Orbit Rings -->
+  <g opacity="0.16" stroke="#06B6D4" stroke-width="1.5">
+    <circle cx="400" cy="380" r="140" fill="none" stroke-dasharray="6 6" />
+    <circle cx="400" cy="380" r="230" fill="none" stroke-dasharray="8 8" />
+    <line x1="400" y1="100" x2="400" y2="660" stroke-dasharray="4 8" />
+    <line x1="120" y1="380" x2="680" y2="380" stroke-dasharray="4 8" />
+  </g>
+
+  <!-- Orbital Ellipse of Mobile Dev Sync -->
+  <ellipse cx="400" cy="380" rx="260" ry="110" transform="rotate(-25, 400, 380)" fill="none" stroke="url(#lunar-grad)" stroke-width="4" stroke-dasharray="14 10" opacity="0.7" />
+
+  <!-- Crescent Moon Symbol (Lunel) with Geometric Terminal Notch -->
+  <path d="M 400 180 
+           A 180 180 0 1 0 540 480 
+           A 150 150 0 1 1 400 180 Z" 
+        fill="url(#core-glow)" 
+        stroke="url(#lunar-grad)" 
+        stroke-width="10" 
+        stroke-linejoin="round" 
+        filter="url(#glow)" />
+
+  <!-- Antigravity Core / Floating Inverted Octahedron at Center -->
+  <g filter="url(#subtle-glow)">
+    <!-- Top Pyramid (Anti-gravity levitation) -->
+    <polygon points="400,290 460,380 400,420 340,380" fill="#1E1B4B" stroke="url(#gravity-pulse)" stroke-width="4" />
+    <polygon points="400,290 400,420 460,380" fill="#22D3EE" opacity="0.4" />
+    
+    <!-- Bottom Inverted Pyramid (Gravity anchor) -->
+    <polygon points="400,420 460,380 400,470 340,380" fill="#0B132B" stroke="#6366F1" stroke-width="4" />
+    <polygon points="400,420 400,470 460,380" fill="#8B5CF6" opacity="0.3" />
+  </g>
+
+  <!-- Code / Terminal Prompt Pulse inside Floating Octahedron -->
+  <g stroke="#F8FAFC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="380,370 395,380 380,390" />
+    <line x1="405" y1="390" x2="420" y2="390" />
+  </g>
+
+  <!-- Mobile Satellite Sync Nodes -->
+  <circle cx="590" cy="290" r="9" fill="#10B981" filter="url(#subtle-glow)" />
+  <circle cx="210" cy="470" r="7" fill="#06B6D4" filter="url(#subtle-glow)" />
+
+  <!-- Typography -->
+  <text x="400" y="685" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="34" font-weight="800" fill="#F8FAFC" letter-spacing="4">
+    LUNEL<tspan fill="#A855F7">GRAVITY</tspan>
+  </text>
+  <text x="400" y="722" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#94A3B8" letter-spacing="3">
+    MOBILE IDE &amp; ANTIGRAVITY CASCADE SYNC
+  </text>
+</svg>
